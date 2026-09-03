@@ -15,11 +15,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Akun admin untuk masuk ke /admin. GANTI PASSWORD INI setelah login pertama.
+        User::updateOrCreate(
+            ['email' => 'admin@javaenduro.id'],
+            [
+                'name' => 'Admin JavaEnduro',
+                'password' => bcrypt('javaenduro123'),
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            TrailRouteSeeder::class,
+            ScheduleEventSeeder::class,
+            GalleryItemSeeder::class,
+            AboutContentSeeder::class,
         ]);
     }
 }

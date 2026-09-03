@@ -1,5 +1,5 @@
-{{-- Ikon garis dummy bertema adventure motor trail, dipilih lewat $icon --}}
-<div class="gal-icon" aria-hidden="true">
+{{-- Ikon garis dummy bertema adventure motor trail, dipilih lewat $icon. $class menentukan pembungkus (gal-icon = overlay ubin galeri, route-icon-mark = ikon inline di kartu rute). --}}
+<div class="{{ $class ?? 'gal-icon' }}" aria-hidden="true">
     @switch($icon)
         @case('climb')
             {{-- Motor menanjak: dua roda + rangka + garis tanjakan --}}

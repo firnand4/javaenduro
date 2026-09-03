@@ -41,15 +41,17 @@
                         <a class="btn btn-outline" href="#komunitas">Gabung Komunitas</a>
                     </div>
                 </div>
-                <div class="hero-card">
-                    <span class="eyebrow">Roadbook Terbaru</span>
-                    <ul>
-                        <li><span class="label">Trek berikutnya</span><span class="val">{{ $nextEvent['route'] }}</span></li>
-                        <li><span class="label">Tanggal</span><span class="val tabular">{{ $nextEvent['date'] }}</span></li>
-                        <li><span class="label">Titik kumpul</span><span class="val">{{ $nextEvent['meeting_point'] }}</span></li>
-                        <li><span class="label">Level</span><span class="val">{{ $nextEvent['level'] }}</span></li>
-                    </ul>
-                </div>
+                @if ($nextEvent)
+                    <div class="hero-card">
+                        <span class="eyebrow">Roadbook Terbaru</span>
+                        <ul>
+                            <li><span class="label">Trek berikutnya</span><span class="val">{{ $nextEvent->name }}</span></li>
+                            <li><span class="label">Tanggal</span><span class="val tabular">{{ $nextEvent->full_date_label }}</span></li>
+                            <li><span class="label">Titik kumpul</span><span class="val">{{ $nextEvent->location }}</span></li>
+                            <li><span class="label">Tipe</span><span class="val">{{ $nextEvent->type }}</span></li>
+                        </ul>
+                    </div>
+                @endif
             </div>
 
             <div class="stat-strip">
@@ -63,17 +65,20 @@
     <!-- TENTANG -->
     <section class="section" id="tentang">
         <div class="wrap about-grid">
-            <div class="about-graphic" role="img" aria-label="Ilustrasi kontur lereng gunung"></div>
+            <div class="about-graphic" role="img" aria-label="Foto komunitas JavaEnduro" style="--graphic-caption: '{{ $about->graphic_caption }}';">
+                @if ($about->image_url)
+                    <img src="{{ $about->image_url }}" alt="Foto komunitas JavaEnduro">
+                @endif
+            </div>
             <div class="about-copy">
                 <span class="eyebrow">Tentang Kami</span>
-                <h2>Bukan Klub Motor. Ini Barisan Penerabas.</h2>
-                <p>JavaEnduro lahir dari kebiasaan sekelompok rider Malang yang lebih sering pulang berlumpur daripada berdebu. Kami memetakan jalur yang tidak ada di GPS mana pun — dari kaki Semeru sampai hutan pinus Cangar.</p>
-                <p>Kami bukan komunitas balap. Kami komunitas yang mengukur perjalanan dari seberapa jujur medannya, bukan seberapa cepat sampainya. Setiap member wajib bawa pulang sampahnya sendiri — trek yang kami rawat hari ini yang akan kami trabas lagi tahun depan.</p>
+                <h2>{{ $about->heading }}</h2>
+                <p>{{ $about->paragraph_1 }}</p>
+                <p>{{ $about->paragraph_2 }}</p>
                 <div class="value-row">
-                    <span class="value-chip">Solidaritas Konvoi</span>
-                    <span class="value-chip">Safety Riding</span>
-                    <span class="value-chip">Leave No Trace</span>
-                    <span class="value-chip">Regenerasi Rider</span>
+                    @foreach ($about->value_chips as $chip)
+                        <span class="value-chip">{{ $chip }}</span>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -84,21 +89,17 @@
         <div class="wrap">
             <div class="section-head">
                 <span class="eyebrow">Rute &amp; Trek</span>
-                <h2>Jalur yang Kami Rawat</h2>
-                <p>Empat karakter medan yang jadi kurikulum wajib setiap rider JavaEnduro — dari kaki Semeru sampai punggungan Kawi, dari yang ramah pemula sampai yang cuma layak ditawarkan ke yang sudah kenyang lumpur.</p>
+                <h2>Jalur Kami</h2>
+                <p>Empat karakter medan yang jadi destinasi wajib setiap rider JavaEnduro — Kaki Gunung Semeru, dari yang pemula sampai yang ingin Hard.</p>
             </div>
             <div class="route-grid">
                 @foreach ($routes as $route)
                     <div class="route-card">
-                        <span class="diff {{ $route['difficulty_class'] }}">{{ $route['difficulty'] }}</span>
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            @foreach ($route['paths'] as $d)
-                                <path d="{{ $d }}"/>
-                            @endforeach
-                        </svg>
-                        <h3>{{ $route['name'] }}</h3>
-                        <div class="meta"><span>{{ $route['distance'] }}</span><span>{{ $route['elevation'] }}</span></div>
-                        <p>{{ $route['desc'] }}</p>
+                        <span class="diff {{ $route->difficulty_class }}">{{ $route->difficulty }}</span>
+                        @include('partials.trail-icon', ['icon' => $route->icon, 'class' => 'route-icon-mark'])
+                        <h3>{{ $route->name }}</h3>
+                        <div class="meta"><span>{{ $route->distance }}</span><span>{{ $route->elevation }}</span></div>
+                        <p>{{ $route->description }}</p>
                     </div>
                 @endforeach
             </div>
@@ -119,10 +120,10 @@
                 </div>
                 @foreach ($schedule as $event)
                     <div class="rb-row">
-                        <span class="rb-date tabular">{{ $event['date'] }}</span>
-                        <span class="rb-name">{{ $event['name'] }}</span>
-                        <span class="rb-loc">{{ $event['location'] }}</span>
-                        <span class="rb-type">{{ $event['type'] }}</span>
+                        <span class="rb-date tabular">{{ $event->date_label }}</span>
+                        <span class="rb-name">{{ $event->name }}</span>
+                        <span class="rb-loc">{{ $event->location }}</span>
+                        <span class="rb-type">{{ $event->type }}</span>
                     </div>
                 @endforeach
             </div>
@@ -139,9 +140,13 @@
             </div>
             <div class="gal-grid">
                 @foreach ($gallery as $tile)
-                    <div class="gal-tile {{ $tile['class'] }}">
-                        @include('partials.trail-icon', ['icon' => $tile['icon']])
-                        <span>{{ $tile['caption'] }}</span>
+                    <div class="gal-tile {{ $tile->image_url ? '' : $tile->tile_style }}">
+                        @if ($tile->image_url)
+                            <img src="{{ $tile->image_url }}" alt="{{ $tile->caption }}" loading="lazy">
+                        @else
+                            @include('partials.trail-icon', ['icon' => $tile->icon, 'class' => 'gal-icon'])
+                        @endif
+                        <span>{{ $tile->caption }}</span>
                     </div>
                 @endforeach
             </div>

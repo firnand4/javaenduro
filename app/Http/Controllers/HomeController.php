@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AboutContent;
+use App\Models\GalleryItem;
+use App\Models\ScheduleEvent;
+use App\Models\TrailRoute;
+
 class HomeController extends Controller
 {
     /**
@@ -26,69 +31,13 @@ class HomeController extends Controller
             ['num' => '6', 'label' => 'Gunung dijelajahi'],
         ];
 
-        $nextEvent = [
-            'route' => 'Susur Kali Brantas',
-            'date' => '20 Sep 2026',
-            'meeting_point' => 'Basecamp Tumpang, Malang',
-            'level' => 'Menengah–Ekstrem',
-        ];
+        $about = AboutContent::current();
+        $routes = TrailRoute::ordered()->get();
+        $schedule = ScheduleEvent::upcomingFirst()->get();
+        $gallery = GalleryItem::ordered()->get();
 
-        $routes = [
-            [
-                'name' => 'Lereng Semeru',
-                'difficulty' => 'Menengah',
-                'difficulty_class' => '',
-                'distance' => '20 KM',
-                'elevation' => '2.100 MDPL',
-                'desc' => 'Tanjakan pasir vulkanik khas kaki Mahameru, berat di gas tapi ringan di grip. Sunrise dari pos terakhir jadi bayaran paling mahal.',
-                'paths' => ['M3 20 L9 8 L13 15 L16 10 L21 20 Z'],
-            ],
-            [
-                'name' => 'Susur Kali Brantas',
-                'difficulty' => 'Ekstrem',
-                'difficulty_class' => 'ext',
-                'distance' => '13 KM',
-                'elevation' => '7x Penyeberangan',
-                'desc' => 'Arus deras di musim hujan, dasar berbatu licin sepanjang tahun. Wajib konvoi, wajib winch, dan wajib rider yang tahu kapan harus berhenti.',
-                'paths' => ['M2 15c2-2 4-2 6 0s4 2 6 0 4-2 6 0', 'M2 19c2-2 4-2 6 0s4 2 6 0 4-2 6 0'],
-            ],
-            [
-                'name' => 'Hutan Pinus Cangar',
-                'difficulty' => 'Pemula',
-                'difficulty_class' => '',
-                'distance' => '8 KM',
-                'elevation' => '1.500 MDPL',
-                'desc' => 'Akar pinus dan tanah gembur berkabut dekat pemandian air panas Cangar. Trek favorit untuk latihan keseimbangan rider baru.',
-                'paths' => ['M4 4v16M4 4l14 5-14 5'],
-            ],
-            [
-                'name' => 'Punggungan Kawi',
-                'difficulty' => 'Ekstrem',
-                'difficulty_class' => 'ext',
-                'distance' => '22 KM',
-                'elevation' => '2.300 MDPL',
-                'desc' => 'Jalur batu dan jurang tipis di kanan-kiri menuju punggungan. Bukan trek buat gengsi-gengsian — ini trek buat yang siap turun dorong motor.',
-                'paths' => ['M3 18 L7 6 L11 14 L15 4 L21 18 Z'],
-            ],
-        ];
-
-        $schedule = [
-            ['date' => '06 SEP', 'name' => 'Trabas Rutin Mingguan', 'location' => 'Basecamp Tumpang, Malang', 'type' => 'Latihan'],
-            ['date' => '20 SEP', 'name' => 'Susur Kali Brantas', 'location' => 'Kepanjen, Malang', 'type' => 'Touring'],
-            ['date' => '04 OKT', 'name' => 'JavaEnduro Adventure Cup 2026', 'location' => 'Lereng Bromo, Kab. Malang', 'type' => 'Kompetisi'],
-            ['date' => '18 OKT', 'name' => 'Kopdar & Servis Bareng', 'location' => 'Basecamp Tumpang, Malang', 'type' => 'Kopdar'],
-        ];
-
-        $gallery = [
-            ['class' => 't1', 'icon' => 'climb', 'caption' => 'Lumpur Lereng Semeru'],
-            ['class' => 't2', 'icon' => 'forest', 'caption' => 'Hutan Pinus Cangar'],
-            ['class' => 't3', 'icon' => 'sunset', 'caption' => 'Sunset Punggungan Kawi'],
-            ['class' => 't4', 'icon' => 'convoy', 'caption' => 'Konvoi Pagi Tumpang'],
-            ['class' => 't5', 'icon' => 'river', 'caption' => 'Nyemplung Kali Brantas'],
-            ['class' => 't6', 'icon' => 'volcano', 'caption' => 'Pasir Vulkanik Bromo'],
-            ['class' => 't7', 'icon' => 'camp', 'caption' => 'Basecamp Tumpang'],
-            ['class' => 't8', 'icon' => 'trophy', 'caption' => 'Adventure Cup 2025'],
-        ];
+        $nextEvent = $schedule->firstWhere('event_date', '>=', today())
+            ?? $schedule->first();
 
         $joinSteps = [
             ['title' => 'Follow & DM', 'desc' => 'Sapa kami di Instagram, ceritakan motor dan jam terbang trabas kamu — pemula pun welcome.'],
@@ -103,7 +52,7 @@ class HomeController extends Controller
         ];
 
         return view('welcome', compact(
-            'menu', 'stats', 'nextEvent', 'routes', 'schedule', 'gallery', 'joinSteps', 'contacts'
+            'menu', 'stats', 'about', 'nextEvent', 'routes', 'schedule', 'gallery', 'joinSteps', 'contacts'
         ));
     }
 }

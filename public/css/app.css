@@ -248,13 +248,26 @@ section{ position: relative; }
     var(--surface);
   border:1px solid var(--line);
   position:relative;
+  overflow:hidden;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 24px 100%, 0 calc(100% - 24px));
 }
+.about-graphic img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:0;
+}
+.about-graphic:has(img)::before{
+  content:""; position:absolute; inset:0; z-index:1;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 45%);
+}
 .about-graphic::after{
-  content:"MERBABU · MERAPI · SUMBING · LAWU";
-  position:absolute; bottom:1rem; left:1rem; right:1rem;
+  content: var(--graphic-caption, "SEMERU · BROMO · KAWI · ARJUNO");
+  position:absolute; bottom:1rem; left:1rem; right:1rem; z-index:2;
   font-family: var(--font-mono); font-size:0.68rem; letter-spacing:0.08em;
   color: var(--ink-faint);
+}
+.about-graphic:has(img)::after{
+  color: rgba(255,255,255,0.85);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 .about-copy p{ margin: 0 0 1.1rem; color: var(--ink-soft); font-size:1.02rem; }
 .about-copy p:first-of-type{ font-size:1.18rem; color:var(--ink); font-weight:500; }
@@ -281,7 +294,7 @@ section{ position: relative; }
 .route-card h3{ font-size:1.6rem; text-transform:uppercase; font-weight:700; max-width: 80%; }
 .route-card .meta{ display:flex; gap:1.4rem; font-family:var(--font-mono); font-size:0.82rem; color:var(--ink-faint); }
 .route-card p{ margin:0; color:var(--ink-soft); font-size:0.96rem; }
-.route-card .icon{ width:20px; height:20px; color: var(--accent-2); }
+.route-icon-mark svg{ width:22px; height:22px; color: var(--accent-2); stroke: currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
 @media (max-width: 760px){ .route-grid{ grid-template-columns:1fr; } }
 
@@ -317,6 +330,14 @@ section{ position: relative; }
   font-family:var(--font-mono); font-size:0.68rem; color: rgba(255,255,255,0.92);
   text-shadow: 0 1px 4px rgba(0,0,0,0.65);
   letter-spacing:0.02em;
+}
+.gal-tile img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:0;
+}
+.gal-tile:has(img)::after{
+  content:""; position:absolute; inset:0; z-index:1;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%);
 }
 .gal-icon{
   position:absolute; inset:0; z-index:1;
