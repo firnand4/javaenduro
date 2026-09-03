@@ -46,9 +46,9 @@ class HomeController extends Controller
         ];
 
         $contacts = [
-            ['label' => 'WhatsApp Komunitas', 'sub' => '+62 812-3456-7890', 'href' => 'https://wa.me/6281234567890'],
+            ['label' => 'WhatsApp', 'sub' => '+62 81333413109', 'href' => 'https://wa.me/6281333413109'],
             ['label' => 'Instagram', 'sub' => '@javaenduro', 'href' => 'https://instagram.com/javaenduro'],
-            ['label' => 'Email', 'sub' => 'halo@javaenduro.id', 'href' => 'mailto:halo@javaenduro.id'],
+            ['label' => 'Email', 'sub' => 'javaenduro.24@gmail.com', 'href' => 'mailto:javaenduro.24@gmail.com'],
         ];
 
         return view('welcome', compact(

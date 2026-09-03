@@ -34,8 +34,8 @@
             <div class="hero-grid">
                 <div>
                     <span class="eyebrow">Komunitas Trail &amp; Trabas — Malang, Jawa Timur</span>
-                    <h1>TRABAS<br><span class="accent-line">TANPA KOMPROMI</span></h1>
-                    <p class="hero-sub">JavaEnduro adalah rumah bagi rider trail asal Malang yang percaya jalur terbaik bukan yang termulus — tapi yang paling jujur. Pasir vulkanik Semeru, tanjakan Kawi, dan susur Kali Brantas adalah gurunya.</p>
+                    <h1>TRABAS<br><span class="accent-line">CHILL BROTHERHOOD</span></h1>
+                    <p class="hero-sub">JavaEnduro adalah rumah bagi rider trail asal Malang yang percaya jalur terbaik bukan yang termulus — tapi yang memiliki cerita. Pasir vulkanik Semeru, tanjakan, dan estape Bromo yang Luarbiasa.</p>
                     <div class="hero-actions">
                         <a class="btn btn-solid" href="#jadwal">Lihat Jadwal Trabas</a>
                         <a class="btn btn-outline" href="#komunitas">Gabung Komunitas</a>
@@ -191,7 +191,7 @@
 
     <footer>
         <div class="wrap foot-row">
-            <span>© {{ date('Y') }} JAVAENDURO — Trabas Tanpa Kompromi</span>
+            <span>© {{ date('Y') }} JAVAENDURO — Trabas Chill</span>
             <span>Basecamp Tumpang, Malang, Jawa Timur</span>
         </div>
     </footer>
