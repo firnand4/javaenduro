@@ -12,7 +12,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->redirectGuestsTo('/admin/login');
+        $middleware->alias([
+            'superadmin' => \App\Http\Middleware\EnsureSuperadmin::class,
+        ]);
+
+        // Tamu yang kena blokir 'auth' diarahkan ke halaman login yang sesuai area-nya.
+        $middleware->redirectGuestsTo(
+            fn (Request $request) => $request->is('kontributor*')
+                ? route('contributor.login')
+                : route('admin.login')
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

@@ -54,7 +54,7 @@ class ScheduleEventController extends Controller
             'event_date' => ['required', 'date'],
             'name' => ['required', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'in:' . implode(',', ScheduleEvent::TYPES)],
+            'category' => ['required', 'in:' . implode(',', ScheduleEvent::CATEGORIES)],
         ]);
     }
 }

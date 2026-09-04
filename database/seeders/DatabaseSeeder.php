@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Admin JavaEnduro',
                 'password' => bcrypt('javaenduro123'),
+                'role' => 'superadmin',
             ]
         );
 

@@ -18,7 +18,7 @@
                     <th>Tanggal</th>
                     <th>Nama Event</th>
                     <th>Lokasi</th>
-                    <th>Tipe</th>
+                    <th>Kategori</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -28,7 +28,7 @@
                         <td class="tabular">{{ $event->date_label }} {{ $event->event_date->year }}</td>
                         <td>{{ $event->name }}</td>
                         <td>{{ $event->location }}</td>
-                        <td>{{ $event->type }}</td>
+                        <td>{{ $event->category }}</td>
                         <td>
                             <div class="row-actions">
                                 <a href="{{ route('admin.schedule.edit', $event) }}" class="btn btn-outline btn-sm">Edit</a>

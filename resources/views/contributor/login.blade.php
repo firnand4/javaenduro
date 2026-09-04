@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk Admin — JavaEnduro</title>
+    <title>Masuk Kontributor — JavaEnduro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,11 +14,12 @@
 <div class="admin-login-wrap">
     <div class="admin-login-card">
         <a href="{{ route('home') }}" class="brand"><span class="mark"><span>JE</span></span>JAVAENDURO</a>
+        <p style="color:var(--ink-soft); font-size:0.92rem; margin:-1rem 0 1.4rem;">Masuk untuk upload &amp; pantau poster event kamu.</p>
 
         @auth
             <div class="admin-alert">
                 Kamu sedang login sebagai <strong>{{ auth()->user()->name }}</strong> ({{ ucfirst(auth()->user()->role) }}).
-                Masuk dengan akun superadmin di bawah untuk ganti sesi.
+                Masuk dengan akun kontributor di bawah untuk ganti sesi.
             </div>
         @endauth
 
@@ -26,7 +27,7 @@
             <div class="admin-alert error">{{ $errors->first() }}</div>
         @endif
 
-        <form method="POST" action="{{ route('admin.login.submit') }}" class="admin-form" style="border:none; padding:0;">
+        <form method="POST" action="{{ route('contributor.login.submit') }}" class="admin-form" style="border:none; padding:0;">
             @csrf
             <div class="admin-field">
                 <label for="email">Email</label>
@@ -40,6 +41,10 @@
                 <button type="submit" class="btn btn-solid" style="border:none; cursor:pointer;">Masuk</button>
             </div>
         </form>
+
+        <p style="margin-top:1.4rem; font-size:0.88rem; color:var(--ink-soft);">
+            Belum punya akun? <a href="{{ route('contributor.register') }}" style="color:var(--accent);">Daftar sebagai kontributor</a>
+        </p>
     </div>
 </div>
 </body>

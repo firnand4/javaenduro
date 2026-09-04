@@ -22,7 +22,7 @@
                 <li><a href="#{{ $item['id'] }}">{{ $item['label'] }}</a></li>
             @endforeach
         </ul>
-        <a class="nav-cta" href="#komunitas">Gabung</a>
+        <a class="nav-cta" href="{{ route('contributor.register') }}">Daftar</a>
         <label class="hamburger" for="nav-toggle" aria-label="Buka menu"><span></span></label>
     </div>
 </nav>
@@ -38,7 +38,7 @@
                     <p class="hero-sub">JavaEnduro adalah rumah bagi rider trail asal Malang yang percaya jalur terbaik bukan yang termulus — tapi yang memiliki cerita. Pasir vulkanik Semeru, tanjakan, dan estape Bromo yang Luarbiasa.</p>
                     <div class="hero-actions">
                         <a class="btn btn-solid" href="#jadwal">Lihat Jadwal Trabas</a>
-                        <a class="btn btn-outline" href="#komunitas">Gabung Komunitas</a>
+                        <a class="btn btn-outline" href="{{ route('contributor.dashboard') }}">Jadi Kontributor</a>
                     </div>
                 </div>
                 @if ($nextEvent)
@@ -48,7 +48,7 @@
                             <li><span class="label">Trek berikutnya</span><span class="val">{{ $nextEvent->name }}</span></li>
                             <li><span class="label">Tanggal</span><span class="val tabular">{{ $nextEvent->full_date_label }}</span></li>
                             <li><span class="label">Titik kumpul</span><span class="val">{{ $nextEvent->location }}</span></li>
-                            <li><span class="label">Tipe</span><span class="val">{{ $nextEvent->type }}</span></li>
+                            <li><span class="label">Kategori</span><span class="val">{{ $nextEvent->category }}</span></li>
                         </ul>
                     </div>
                 @endif
@@ -112,21 +112,36 @@
             <div class="section-head">
                 <span class="eyebrow">Jadwal Event</span>
                 <h2>Roadbook Musim Ini</h2>
-                <p>Dari trabas rutin mingguan sampai adventure cup tahunan — semua titik kumpul dan jenis acara ada di sini.</p>
+                <p>5 event paling dekat ke hari ini per kategori — tanggal, judul, dan lokasinya.</p>
             </div>
-            <div class="roadbook">
-                <div class="rb-row head">
-                    <span>Tanggal</span><span>Event</span><span>Lokasi</span><span>Tipe</span>
+
+            @foreach (\App\Models\ScheduleEvent::CATEGORIES as $category)
+                @php $group = $roadbookByCategory[$category]; @endphp
+                <div class="category-block">
+                    <h3 class="category-title">{{ $category }}</h3>
+                    <p class="category-desc">{{ \App\Models\ScheduleEvent::CATEGORY_DESCRIPTIONS[$category] }}</p>
+
+                    @if ($group['items']->isEmpty())
+                        <p class="poster-empty">Belum ada event di kategori ini.</p>
+                    @else
+                        <div class="roadbook">
+                            <div class="rb-row head">
+                                <span>Tanggal</span><span>Event</span><span>Lokasi</span>
+                            </div>
+                            @foreach ($group['items'] as $item)
+                                <div class="rb-row">
+                                    <span class="rb-date tabular">{{ $item['date_label'] }}</span>
+                                    <span class="rb-name">{{ $item['title'] }}</span>
+                                    <span class="rb-loc">{{ $item['location'] }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                        @if ($group['seeAllUrl'] && $group['total'] > 5)
+                            <a href="{{ $group['seeAllUrl'] }}" class="btn btn-outline btn-sm" style="margin-top:1.1rem;">Lihat Semua Event</a>
+                        @endif
+                    @endif
                 </div>
-                @foreach ($schedule as $event)
-                    <div class="rb-row">
-                        <span class="rb-date tabular">{{ $event->date_label }}</span>
-                        <span class="rb-name">{{ $event->name }}</span>
-                        <span class="rb-loc">{{ $event->location }}</span>
-                        <span class="rb-type">{{ $event->type }}</span>
-                    </div>
-                @endforeach
-            </div>
+            @endforeach
         </div>
     </section>
 
@@ -153,23 +168,45 @@
         </div>
     </section>
 
-    <!-- KOMUNITAS -->
-    <section class="section" id="komunitas">
+    <!-- JADWAL EVENT TRABAS (poster kontributor) -->
+    <section class="section" id="event-trabas">
         <div class="wrap">
-            <div class="section-head">
-                <span class="eyebrow">Komunitas</span>
-                <h2>Cara Gabung</h2>
-                <p>Tidak ada tes masuk. Yang kami cari cuma niat belajar medan dan mau jaga sesama rider di jalur.</p>
+            <div class="section-head poster-head">
+                <div>
+                    <span class="eyebrow">Jadwal Event Trabas</span>
+                    <h2>Poster dari Kontributor</h2>
+                    <p>Event trabas yang diunggah langsung oleh rider lain se-Indonesia — setiap poster sudah divalidasi superadmin sebelum tayang di sini.</p>
+                </div>
+                <a href="{{ route('contributor.dashboard') }}" class="btn btn-solid">Upload Poster Event</a>
             </div>
-            <div class="join-grid">
-                @foreach ($joinSteps as $i => $step)
-                    <div class="join-card">
-                        <span class="idx tabular">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                        <h3>{{ $step['title'] }}</h3>
-                        <p>{{ $step['desc'] }}</p>
-                    </div>
-                @endforeach
-            </div>
+
+            @foreach (\App\Models\EventPoster::CATEGORIES as $category)
+                @php $posters = $eventPostersByCategory->get($category, collect()); @endphp
+                <div class="category-block" id="poster-{{ \Illuminate\Support\Str::slug($category) }}">
+                    <h3 class="category-title">{{ $category }}</h3>
+                    @if ($posters->isEmpty())
+                        <p class="poster-empty">Belum ada poster event yang tervalidasi di kategori ini. Jadi kontributor pertama yang mengunggah!</p>
+                    @else
+                        <div class="poster-grid">
+                            @foreach ($posters as $poster)
+                                <button type="button" class="poster-card js-poster-trigger"
+                                        data-image="{{ $poster->image_url }}"
+                                        data-title="{{ $poster->display_title }}"
+                                        data-date="{{ $poster->date_label }}"
+                                        data-loc="{{ $poster->location_label }}"
+                                        data-category="{{ $poster->category }}"
+                                        aria-label="Lihat poster {{ $poster->display_title }} di {{ $poster->location_label }}, {{ $poster->date_label }}">
+                                    <img src="{{ $poster->image_url }}" alt="Poster event trabas di {{ $poster->location_label }}" loading="lazy">
+                                    <div class="poster-meta">
+                                        <span class="poster-date tabular">{{ $poster->date_label }}</span>
+                                        <span class="poster-loc">{{ $poster->location_label }}</span>
+                                    </div>
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            @endforeach
         </div>
     </section>
 
@@ -196,5 +233,53 @@
         </div>
     </footer>
 </main>
+
+<!-- Lightbox poster: dipicu klik kartu poster di section Jadwal Event Trabas -->
+<dialog id="poster-lightbox" class="poster-lightbox">
+    <button type="button" class="poster-lightbox-close" aria-label="Tutup">&times;</button>
+    <img id="poster-lightbox-img" src="" alt="">
+    <div class="poster-lightbox-meta">
+        <span class="eyebrow" id="poster-lightbox-category"></span>
+        <span class="poster-lightbox-title" id="poster-lightbox-title"></span>
+        <span class="poster-lightbox-loc" id="poster-lightbox-loc"></span>
+        <span class="poster-lightbox-date tabular" id="poster-lightbox-date"></span>
+    </div>
+</dialog>
+
+<script>
+    (function () {
+        var lightbox = document.getElementById('poster-lightbox');
+        if (!lightbox) return;
+
+        var img = document.getElementById('poster-lightbox-img');
+        var title = document.getElementById('poster-lightbox-title');
+        var loc = document.getElementById('poster-lightbox-loc');
+        var date = document.getElementById('poster-lightbox-date');
+        var category = document.getElementById('poster-lightbox-category');
+
+        document.querySelectorAll('.js-poster-trigger').forEach(function (card) {
+            card.addEventListener('click', function () {
+                img.src = card.dataset.image;
+                img.alt = 'Poster ' + card.dataset.title;
+                title.textContent = card.dataset.title;
+                loc.textContent = card.dataset.loc;
+                date.textContent = card.dataset.date;
+                category.textContent = card.dataset.category;
+                lightbox.showModal();
+            });
+        });
+
+        lightbox.querySelector('.poster-lightbox-close').addEventListener('click', function () {
+            lightbox.close();
+        });
+
+        // Klik area gelap di luar poster (backdrop) ikut menutup dialog.
+        lightbox.addEventListener('click', function (e) {
+            var r = lightbox.getBoundingClientRect();
+            var insideDialog = e.clientY >= r.top && e.clientY <= r.bottom && e.clientX >= r.left && e.clientX <= r.right;
+            if (!insideDialog) lightbox.close();
+        });
+    })();
+</script>
 </body>
 </html>

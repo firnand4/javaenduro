@@ -2,6 +2,40 @@
 
 .admin-shell{ display:flex; min-height:100vh; }
 
+/* Kontributor — topbar, bukan sidebar, karena cuma satu halaman tujuan. */
+.contrib-topbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding: 1.1rem clamp(1.25rem,4vw,2.5rem);
+  border-bottom:1px solid var(--line);
+}
+.contrib-topbar .brand{
+  font-family: var(--font-display); font-weight:800; font-size:1.2rem;
+  text-decoration:none; color:var(--ink); display:flex; align-items:center; gap:0.5rem;
+}
+.contrib-topbar .brand .mark{
+  width:26px; height:26px; flex:none; background:var(--accent);
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+  display:grid; place-items:center;
+}
+.contrib-topbar .brand .mark span{ color:var(--accent-ink); font-family:var(--font-mono); font-weight:700; font-size:0.7rem; }
+.contrib-main{ max-width: 860px; margin-inline:auto; padding: clamp(1.5rem,3vw,2.8rem); }
+
+.status-badge{
+  font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em;
+  padding:0.25rem 0.6rem; border:1px solid var(--line-strong); white-space:nowrap;
+}
+.status-badge.pending{ color:var(--ink-faint); }
+.status-badge.approved{ color:var(--accent-2); border-color:var(--accent-2); }
+.status-badge.rejected{ color:var(--accent); border-color:var(--accent); }
+.status-badge.archived{ color:var(--ink-faint); border-style:dashed; opacity:0.75; }
+
+/* "Login sebagai" — dipakai di sidebar admin & topbar kontributor. */
+.admin-whoami{
+  display:flex; flex-direction:column; gap:0.5rem;
+  padding:0.9rem; border:1px solid var(--line); background:var(--surface-2);
+}
+.admin-whoami-name{ font-size:0.88rem; font-weight:600; color:var(--ink); }
+
 .admin-sidebar{
   width: 240px; flex: none;
   background: var(--surface);

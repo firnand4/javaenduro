@@ -19,7 +19,13 @@
             <a href="{{ route('admin.routes.index') }}" class="{{ request()->routeIs('admin.routes.*') ? 'active' : '' }}">Rute &amp; Trek</a>
             <a href="{{ route('admin.schedule.index') }}" class="{{ request()->routeIs('admin.schedule.*') ? 'active' : '' }}">Jadwal Event</a>
             <a href="{{ route('admin.gallery.index') }}" class="{{ request()->routeIs('admin.gallery.*') ? 'active' : '' }}">Galeri</a>
+            <a href="{{ route('admin.posters.index') }}" class="{{ request()->routeIs('admin.posters.*') ? 'active' : '' }}">Validasi Poster</a>
+            <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">Pengguna</a>
         </nav>
+        <div class="admin-whoami">
+            <span class="admin-whoami-name">{{ auth()->user()->name }}</span>
+            <span class="status-badge approved">Superadmin</span>
+        </div>
         <form method="POST" action="{{ route('admin.logout') }}">
             @csrf
             <button type="submit" class="admin-logout">Keluar</button>

@@ -34,10 +34,10 @@
         </div>
 
         <div class="admin-field">
-            <label for="type">Tipe</label>
-            <select id="type" name="type" required>
-                @foreach (\App\Models\ScheduleEvent::TYPES as $option)
-                    <option value="{{ $option }}" @selected(old('type', $event->type) === $option)>{{ $option }}</option>
+            <label for="category">Kategori</label>
+            <select id="category" name="category" required>
+                @foreach (\App\Models\ScheduleEvent::CATEGORIES as $option)
+                    <option value="{{ $option }}" @selected(old('category', $event->category) === $option)>{{ $option }}</option>
                 @endforeach
             </select>
         </div>

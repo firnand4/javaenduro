@@ -11,14 +11,22 @@ class ScheduleEvent extends Model
         'event_date',
         'name',
         'location',
-        'type',
+        'category',
     ];
 
     protected $casts = [
         'event_date' => 'date',
     ];
 
-    public const TYPES = ['Latihan', 'Touring', 'Kompetisi', 'Kopdar'];
+    /** Urutan ini juga dipakai sebagai urutan tampil grup di landing page. */
+    public const CATEGORIES = ['Open Trip Trabas Javaenduro', 'Trabas Baksos Adventure', 'Race Adventure'];
+
+    /** Keterangan singkat di bawah judul tiap kategori pada section "Roadbook Musim Ini". */
+    public const CATEGORY_DESCRIPTIONS = [
+        'Open Trip Trabas Javaenduro' => 'Jadwal event open trabas by Javaenduro.',
+        'Trabas Baksos Adventure' => 'Jadwal Trabas Baksos Adventure seperti pembangunan masjid atau donasi pada hal tertentu.',
+        'Race Adventure' => 'Jadwal Race atau event Adventure MAT, Hiu Selatan, KWB, atau event yang tidak berhubungan dengan donasi.',
+    ];
 
     public function scopeUpcomingFirst(Builder $query): Builder
     {
@@ -35,5 +43,16 @@ class ScheduleEvent extends Model
     public function getFullDateLabelAttribute(): string
     {
         return $this->event_date->locale('id')->isoFormat('DD MMM YYYY');
+    }
+
+    /** Dibandingkan per tanggal (bukan jam) — event hari ini masih dianggap "Akan Datang". */
+    public function getIsUpcomingAttribute(): bool
+    {
+        return $this->event_date->greaterThanOrEqualTo(today());
+    }
+
+    public function getEventStatusLabelAttribute(): string
+    {
+        return $this->is_upcoming ? 'Akan Datang' : 'Selesai';
     }
 }

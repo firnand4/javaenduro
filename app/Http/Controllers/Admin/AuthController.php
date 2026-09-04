@@ -11,7 +11,9 @@ class AuthController extends Controller
 {
     public function showLogin(): \Illuminate\View\View|RedirectResponse
     {
-        if (Auth::check()) {
+        // Cuma lempar ke dashboard kalau yang login itu superadmin — kalau yang login
+        // kontributor, tetap tampilkan form ini supaya dia bisa ganti login jadi superadmin.
+        if (Auth::check() && Auth::user()->isSuperadmin()) {
             return redirect()->route('admin.dashboard');
         }
 
