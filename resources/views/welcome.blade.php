@@ -212,16 +212,28 @@
 
     <!-- KONTAK -->
     <section class="section" id="kontak" style="border-bottom:none;">
-        <div class="wrap contact">
-            <div>
-                <span class="eyebrow">Kontak</span>
-                <h2>Sebelum Trabas, Ngobrol Dulu.</h2>
-                <p class="contact-note" style="margin-top:1rem;">Ada pertanyaan soal medan, jadwal, atau mau ajak kerja sama event? Sampaikan lewat kanal berikut.</p>
-            </div>
-            <div class="contact-links">
-                @foreach ($contacts as $contact)
-                    <a href="{{ $contact['href'] }}" target="_blank" rel="noopener">{{ $contact['label'] }} <span class="sub">{{ $contact['sub'] }}</span></a>
-                @endforeach
+        <div class="wrap">
+            <div class="contact">
+                <div>
+                    <span class="eyebrow">Kontak</span>
+                    <h2>Sebelum Trabas, Ngobrol Dulu.</h2>
+                    <p class="contact-note" style="margin-top:1rem;">Ada pertanyaan soal medan, jadwal, atau mau ajak kerja sama event? Sampaikan lewat kanal berikut.</p>
+
+                    <div class="contact-map">
+                        <iframe
+                            src="https://www.google.com/maps?q=-8.0717568,112.7572785&z=17&output=embed"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            allowfullscreen
+                            title="Peta lokasi Javaenduro Basecamp"></iframe>
+                        <a class="contact-map-link" href="https://maps.app.goo.gl/KRxRi2roodBkAqrw9" target="_blank" rel="noopener">Buka di Google Maps →</a>
+                    </div>
+                </div>
+                <div class="contact-links">
+                    @foreach ($contacts as $contact)
+                        <a href="{{ $contact['href'] }}" target="_blank" rel="noopener">{{ $contact['label'] }} <span class="sub">{{ $contact['sub'] }}</span></a>
+                    @endforeach
+                </div>
             </div>
         </div>
     </section>

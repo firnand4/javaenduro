@@ -52,6 +52,7 @@ class HomeController extends Controller
             ['label' => 'WhatsApp', 'sub' => '+62 81333413109', 'href' => 'https://wa.me/6281333413109'],
             ['label' => 'Instagram', 'sub' => '@javaenduro', 'href' => 'https://instagram.com/javaenduro'],
             ['label' => 'TikTok', 'sub' => '@javaenduro', 'href' => 'https://tiktok.com/@javaenduro'],
+            ['label' => 'YouTube', 'sub' => '@javaenduro', 'href' => 'https://www.youtube.com/@javaenduro'],
             ['label' => 'Email', 'sub' => 'javaenduro.24@gmail.com', 'href' => 'mailto:javaenduro.24@gmail.com'],
         ];
 
@@ -63,12 +64,11 @@ class HomeController extends Controller
     /**
      * Section "Roadbook Musim Ini" mengambil dari dua sumber berbeda tergantung kategori —
      * event resmi (ScheduleEvent, dikelola admin) atau poster kontributor yang sudah divalidasi
-     * (EventPoster). Di sini keduanya diseragamkan jadi satu bentuk baris: status, judul, lokasi,
-     * tanggal — lalu dibatasi 5 yang paling dekat ke hari ini (bisa yang baru lewat atau akan datang).
+     * (EventPoster). Di sini keduanya diseragamkan jadi satu bentuk baris: judul, lokasi, tanggal.
+     * Event yang tanggalnya sudah lewat disembunyikan — cuma yang akan datang, dibatasi 5 terdekat.
      */
     private function buildRoadbook($schedule, $eventPosters): array
     {
-        $today = today();
         $roadbook = [];
 
         foreach (ScheduleEvent::CATEGORIES as $category) {
@@ -81,7 +81,6 @@ class HomeController extends Controller
                     'title' => $poster->display_title,
                     'location' => $poster->location_label,
                     'is_upcoming' => $poster->is_upcoming,
-                    'status_label' => $poster->event_status_label,
                 ])
                 : $schedule->where('category', $category)->map(fn (ScheduleEvent $event) => [
                     'date' => $event->event_date,
@@ -89,17 +88,13 @@ class HomeController extends Controller
                     'title' => $event->name,
                     'location' => $event->location,
                     'is_upcoming' => $event->is_upcoming,
-                    'status_label' => $event->event_status_label,
                 ]);
 
-            $nearestFive = $items
-                ->sortBy(fn (array $item) => $today->diffInDays($item['date']))
-                ->take(5)
-                ->values();
+            $upcoming = $items->where('is_upcoming', true)->sortBy('date')->values();
 
             $roadbook[$category] = [
-                'items' => $nearestFive,
-                'total' => $items->count(),
+                'items' => $upcoming->take(5)->values(),
+                'total' => $upcoming->count(),
                 'seeAllUrl' => $isPosterCategory ? '#poster-' . Str::slug($category) : null,
             ];
         }
