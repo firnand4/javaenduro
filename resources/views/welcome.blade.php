@@ -216,7 +216,7 @@
             <div class="contact">
                 <div>
                     <span class="eyebrow">Kontak</span>
-                    <h2>Basecamp Javaenduro & Sosial Media</h2>
+                    <h2>Basecamp Javaenduro</h2>
                     <p class="contact-note" style="margin-top:1rem;">Ada pertanyaan soal medan, jadwal, atau mau ajak kerja sama event? Sampaikan lewat kanal berikut.</p>
 
                     <div class="contact-map">
