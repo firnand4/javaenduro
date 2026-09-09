@@ -216,7 +216,7 @@
             <div class="contact">
                 <div>
                     <span class="eyebrow">Kontak</span>
-                    <h2>Sebelum Trabas, Ngobrol Dulu.</h2>
+                    <h2>Basecamp Javaenduro & Sosial Media</h2>
                     <p class="contact-note" style="margin-top:1rem;">Ada pertanyaan soal medan, jadwal, atau mau ajak kerja sama event? Sampaikan lewat kanal berikut.</p>
 
                     <div class="contact-map">
@@ -241,7 +241,7 @@
     <footer>
         <div class="wrap foot-row">
             <span>© {{ date('Y') }} JAVAENDURO — Trabas Chill</span>
-            <span>Basecamp Tumpang, Malang, Jawa Timur</span>
+            <span>Basecamp Poncokusumo, Malang, Jawa Timur</span>
         </div>
     </footer>
 </main>
