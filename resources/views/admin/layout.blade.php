@@ -16,9 +16,9 @@
         <a href="{{ route('home') }}" class="brand" target="_blank"><span class="mark"><span>JE</span></span>JAVAENDURO</a>
         <nav class="admin-nav">
             <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
+            <a href="{{ route('admin.hero.edit') }}" class="{{ request()->routeIs('admin.hero.*') ? 'active' : '' }}">Video Beranda</a>
             <a href="{{ route('admin.routes.index') }}" class="{{ request()->routeIs('admin.routes.*') ? 'active' : '' }}">Rute &amp; Trek</a>
             <a href="{{ route('admin.schedule.index') }}" class="{{ request()->routeIs('admin.schedule.*') ? 'active' : '' }}">Jadwal Event</a>
-            <a href="{{ route('admin.gallery.index') }}" class="{{ request()->routeIs('admin.gallery.*') ? 'active' : '' }}">Galeri</a>
             <a href="{{ route('admin.posters.index') }}" class="{{ request()->routeIs('admin.posters.*') ? 'active' : '' }}">Validasi Poster</a>
             <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">Pengguna</a>
         </nav>

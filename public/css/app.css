@@ -160,6 +160,7 @@ section{ position: relative; }
 
 /* ============ HERO ============ */
 .hero{
+  position:relative;
   padding: clamp(3rem,8vw,6rem) 0 clamp(2.5rem,6vw,4rem);
   background:
     radial-gradient(circle at 14% 22%, color-mix(in srgb, var(--accent) 22%, transparent) 0, transparent 34%),
@@ -168,6 +169,23 @@ section{ position: relative; }
     var(--bg);
   overflow:hidden;
 }
+.hero > .wrap{ position:relative; z-index:2; }
+.hero-bg-video{
+  position:absolute; inset:0; z-index:0;
+  width:100%; height:100%; object-fit:cover;
+}
+.hero-bg-overlay{
+  position:absolute; inset:0; z-index:1;
+  background:
+    linear-gradient(to top, var(--bg) 0%, color-mix(in srgb, var(--bg) 55%, transparent) 40%, color-mix(in srgb, var(--bg) 78%, transparent) 100%);
+}
+.hero-video-toggle{
+  position:absolute; right:1.25rem; bottom:1.25rem; z-index:3;
+  width:38px; height:38px; padding:0; display:grid; place-items:center;
+  background:rgba(0,0,0,0.55); border:1px solid var(--line-strong); color:#fff; cursor:pointer;
+}
+.hero-video-toggle:hover{ background:rgba(0,0,0,0.75); }
+.hero-video-toggle svg{ width:16px; height:16px; }
 .hero-grid{
   display:grid; grid-template-columns: 1.3fr 0.9fr; gap: clamp(2rem,4vw,4rem);
   align-items:end;
@@ -284,7 +302,11 @@ section{ position: relative; }
   background: var(--surface); border:1px solid var(--line);
   padding: 1.6rem; display:flex; flex-direction:column; gap:0.9rem;
   position:relative;
+  width:100%; text-align:left; font:inherit; color:inherit;
+  -webkit-appearance:none; appearance:none; cursor:pointer;
 }
+.route-card:hover, .route-card:focus-visible{ border-color:var(--accent); }
+.route-card:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
 .route-card .diff{
   position:absolute; top:1.3rem; right:1.3rem;
   font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.06em;
@@ -293,8 +315,47 @@ section{ position: relative; }
 .route-card .diff.ext{ color: var(--accent); border-color: var(--accent); }
 .route-card h3{ font-size:1.6rem; text-transform:uppercase; font-weight:700; max-width: 80%; }
 .route-card .meta{ display:flex; gap:1.4rem; font-family:var(--font-mono); font-size:0.82rem; color:var(--ink-faint); }
-.route-card p{ margin:0; color:var(--ink-soft); font-size:0.96rem; }
+.route-card p{ margin:0; color:var(--ink); font-size:0.96rem; }
+.route-card-cta{
+  font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em;
+  color:var(--accent);
+}
 .route-icon-mark svg{ width:22px; height:22px; color: var(--accent-2); stroke: currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+/* Dialog detail rute — muncul saat kartu rute diklik */
+.route-detail-dialog{
+  border:none; padding:0; margin:auto; background:var(--surface); color:var(--ink);
+  max-width:min(92vw, 720px); max-height:88vh; width:100%;
+  overflow-y:auto;
+}
+.route-detail-dialog::backdrop{ background:rgba(0,0,0,0.78); backdrop-filter:blur(2px); }
+.route-detail-close{
+  position:sticky; top:0.8rem; float:right; margin-right:0.8rem; z-index:2;
+  width:36px; height:36px; border:none; background:rgba(0,0,0,0.55); color:#fff;
+  font-size:1.4rem; line-height:1; cursor:pointer; display:grid; place-items:center;
+}
+.route-detail-close:hover{ background:rgba(0,0,0,0.75); }
+.route-detail-head{ padding: 1.8rem 1.8rem 0; position:relative; }
+.route-detail-head .diff{
+  font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em;
+  padding:0.25rem 0.6rem; border:1px solid var(--line-strong); color:var(--ink-soft); display:inline-block; margin-bottom:0.8rem;
+}
+.route-detail-head .diff.ext{ color:var(--accent); border-color:var(--accent); }
+.route-detail-head h3{ font-family:var(--font-display); font-size:2rem; text-transform:uppercase; margin-bottom:0.5rem; color:var(--ink); }
+.route-detail-head .meta{ display:flex; gap:1.4rem; font-family:var(--font-mono); font-size:0.85rem; color:var(--accent-2); }
+.route-detail-desc{ padding: 1.2rem 1.8rem 0; color:var(--ink-soft); font-size:0.98rem; max-width:62ch; white-space:pre-line; }
+.route-detail-section{ padding: 1.4rem 1.8rem 0; }
+.route-detail-section:last-child{ padding-bottom:1.8rem; }
+.route-detail-section h4{
+  font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em;
+  color:var(--ink-faint); margin-bottom:0.7rem;
+}
+.route-detail-section img{ width:100%; border:1px solid var(--line); }
+.route-detail-section video{ width:100%; border:1px solid var(--line); background:var(--bg); }
+.route-detail-video-embed{ position:relative; width:100%; aspect-ratio:16/9; border:1px solid var(--line); background:var(--bg); }
+.route-detail-video-embed iframe{ position:absolute; inset:0; width:100%; height:100%; border:none; }
+.route-detail-gallery{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:0.6rem; }
+.route-detail-gallery img{ aspect-ratio:1; object-fit:cover; }
 
 @media (max-width: 760px){ .route-grid{ grid-template-columns:1fr; } }
 
@@ -322,11 +383,24 @@ section{ position: relative; }
 }
 
 /* ============ GALERI ============ */
-.gal-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
-.gal-tile{
-  aspect-ratio: 1; position:relative; overflow:hidden;
-  border:1px solid var(--line);
+.gal-grid{
+  display:grid; grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 160px; grid-auto-flow: dense; gap: 0.6rem;
 }
+.gal-tile{
+  position:relative; overflow:hidden;
+  border:1px solid var(--line); background:var(--surface);
+  padding:0; margin:0; font:inherit; text-align:inherit; color:inherit;
+  -webkit-appearance:none; appearance:none; display:block; width:100%;
+  cursor:pointer;
+}
+.gal-tile:hover img{ filter:brightness(1.08); }
+.gal-tile:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+@media (prefers-reduced-motion: no-preference){
+  .gal-tile img{ transition: filter .2s ease; }
+}
+.gal-tile-big{ grid-column: span 2; grid-row: span 2; }
+.gal-tile-wide{ grid-column: span 2; }
 .gal-tile span{
   position:absolute; left:0.7rem; bottom:0.6rem; right:0.7rem; z-index:2;
   font-family:var(--font-mono); font-size:0.68rem; color: rgba(255,255,255,0.92);
@@ -367,7 +441,9 @@ section{ position: relative; }
 .gal-tile.t7{ background: radial-gradient(circle at 40% 60%, #22283A, #0E1018 70%); }
 .gal-tile.t8{ background: linear-gradient(160deg, #8A5CF6, #2E5FCB 70%); }
 
-@media (max-width: 860px){ .gal-grid{ grid-template-columns: repeat(2,1fr);} }
+@media (max-width: 860px){
+  .gal-grid{ grid-template-columns: repeat(2,1fr); grid-auto-rows: 140px; }
+}
 
 /* ============ JADWAL EVENT TRABAS (poster kontributor) ============ */
 .poster-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:1.5rem; flex-wrap:wrap; }
@@ -400,7 +476,7 @@ section{ position: relative; }
 
 /* Lightbox poster (klik kartu -> tampil full image) */
 .poster-lightbox{
-  border:none; padding:0; margin:auto; background:transparent;
+  border:none; padding:0; margin:auto; background:transparent; color:var(--ink);
   max-width:min(92vw, 640px); max-height:90vh; width:100%;
 }
 .poster-lightbox[open]{ display:flex; flex-direction:column; }

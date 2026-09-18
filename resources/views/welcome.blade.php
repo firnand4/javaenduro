@@ -30,12 +30,17 @@
 <main id="top">
     <!-- HERO -->
     <section class="hero" id="beranda">
+        @if ($hero->video_url)
+            <video class="hero-bg-video" id="hero-bg-video" src="{{ $hero->video_url }}" autoplay muted loop playsinline></video>
+            <div class="hero-bg-overlay"></div>
+            <button type="button" class="hero-video-toggle" id="hero-video-toggle" aria-label="Jeda video latar">
+                <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+            </button>
+        @endif
         <div class="wrap">
             <div class="hero-grid">
                 <div>
-                    <span class="eyebrow">Komunitas Trail &amp; Trabas — Malang, Jawa Timur</span>
                     <h1>TRABAS<br><span class="accent-line">CHILL BROTHERHOOD</span></h1>
-                    <p class="hero-sub">JavaEnduro adalah rumah bagi rider trail asal Malang yang percaya jalur terbaik bukan yang termulus — tapi yang memiliki cerita. Pasir vulkanik Semeru, tanjakan, dan estape Bromo yang Luarbiasa.</p>
                     <div class="hero-actions">
                         <a class="btn btn-solid" href="#jadwal">Lihat Jadwal Trabas</a>
                         <a class="btn btn-outline" href="{{ route('contributor.dashboard') }}">Jadi Kontributor</a>
@@ -84,27 +89,71 @@
         </div>
     </section>
 
-    <!-- RUTE & TREK -->
+    <!-- RUTE & PAKET -->
     <section class="section" id="rute">
         <div class="wrap">
             <div class="section-head">
-                <span class="eyebrow">Rute &amp; Trek</span>
-                <h2>Jalur Kami</h2>
-                <p>Empat karakter medan yang jadi destinasi wajib setiap rider JavaEnduro — Kaki Gunung Semeru, dari yang pemula sampai yang ingin Hard.</p>
+                <span class="eyebrow">Rute &amp; Paket</span>
+                <h2>Pilih Destinasi Favorit Anda</h2>
+                <p>Empat karakter medan yang jadi destinasi wajib setiap rider JavaEnduro — Kaki Gunung Semeru, dari yang pemula sampai yang ingin Hard. Klik kartu untuk lihat detail lengkap.</p>
             </div>
             <div class="route-grid">
                 @foreach ($routes as $route)
-                    <div class="route-card">
+                    <button type="button" class="route-card js-route-trigger" data-target="route-detail-{{ $route->id }}" aria-label="Lihat detail {{ $route->name }}">
                         <span class="diff {{ $route->difficulty_class }}">{{ $route->difficulty }}</span>
                         @include('partials.trail-icon', ['icon' => $route->icon, 'class' => 'route-icon-mark'])
                         <h3>{{ $route->name }}</h3>
                         <div class="meta"><span>{{ $route->distance }}</span><span>{{ $route->elevation }}</span></div>
-                        <p>{{ $route->description }}</p>
-                    </div>
+                        <p>{{ $route->short_description }}</p>
+                        <span class="route-card-cta">Lihat Detail →</span>
+                    </button>
                 @endforeach
             </div>
         </div>
     </section>
+
+    @foreach ($routes as $route)
+        <dialog id="route-detail-{{ $route->id }}" class="route-detail-dialog">
+            <button type="button" class="route-detail-close" aria-label="Tutup">&times;</button>
+            <div class="route-detail-head">
+                <span class="diff {{ $route->difficulty_class }}">{{ $route->difficulty }}</span>
+                <h3>{{ $route->name }}</h3>
+                <div class="meta"><span>{{ $route->distance }}</span><span>{{ $route->elevation }}</span></div>
+            </div>
+            <p class="route-detail-desc">{{ $route->description }}</p>
+
+            @if ($route->map_image_url)
+                <div class="route-detail-section">
+                    <h4>Peta Jalur</h4>
+                    <img src="{{ $route->map_image_url }}" alt="Peta jalur {{ $route->name }}" loading="lazy">
+                </div>
+            @endif
+
+            @if ($route->has_teaser_video)
+                <div class="route-detail-section">
+                    <h4>Video Teaser</h4>
+                    @if ($route->teaser_video_url)
+                        <video src="{{ $route->teaser_video_url }}" controls playsinline></video>
+                    @else
+                        <div class="route-detail-video-embed">
+                            <iframe src="{{ $route->teaser_youtube_embed_url }}" title="Video teaser {{ $route->name }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+                        </div>
+                    @endif
+                </div>
+            @endif
+
+            @if ($route->photos->isNotEmpty())
+                <div class="route-detail-section" data-section="gallery">
+                    <h4>Galeri Foto</h4>
+                    <div class="route-detail-gallery">
+                        @foreach ($route->photos as $photo)
+                            <img src="{{ $photo->image_url }}" alt="Foto {{ $route->name }}" loading="lazy">
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        </dialog>
+    @endforeach
 
     <!-- JADWAL -->
     <section class="section" id="jadwal">
@@ -151,20 +200,29 @@
             <div class="section-head">
                 <span class="eyebrow">Galeri</span>
                 <h2>Potongan Trek Terakhir</h2>
-                <p>Placeholder tekstur — ganti ubin di bawah dengan foto &amp; video dokumentasi trabas kalian.</p>
+                <p>Momen-momen trabas terbaik dari tiap rute — klik untuk lihat galeri foto lengkapnya.</p>
             </div>
-            <div class="gal-grid">
-                @foreach ($gallery as $tile)
-                    <div class="gal-tile {{ $tile->image_url ? '' : $tile->tile_style }}">
-                        @if ($tile->image_url)
-                            <img src="{{ $tile->image_url }}" alt="{{ $tile->caption }}" loading="lazy">
-                        @else
-                            @include('partials.trail-icon', ['icon' => $tile->icon, 'class' => 'gal-icon'])
-                        @endif
-                        <span>{{ $tile->caption }}</span>
-                    </div>
-                @endforeach
-            </div>
+            @if ($galleryRoutes->isEmpty())
+                <p class="poster-empty">Belum ada foto galeri. Tambahkan lewat galeri foto di halaman edit rute.</p>
+            @else
+                @php $galleryCount = $galleryRoutes->count(); @endphp
+                <div class="gal-grid">
+                    @foreach ($galleryRoutes as $route)
+                        @php
+                            $sizeClass = '';
+                            if ($galleryCount >= 4) {
+                                $pos = $loop->iteration;
+                                if ($pos % 6 === 1) { $sizeClass = 'gal-tile-big'; }
+                                elseif ($pos % 6 === 4) { $sizeClass = 'gal-tile-wide'; }
+                            }
+                        @endphp
+                        <button type="button" class="gal-tile js-route-trigger {{ $sizeClass }}" data-target="route-detail-{{ $route->id }}" data-scroll-to="gallery" aria-label="Lihat galeri foto {{ $route->name }}">
+                            <img src="{{ $route->photos->first()->image_url }}" alt="Galeri foto {{ $route->name }}" loading="lazy">
+                            <span>{{ $route->name }} · {{ $route->photos->count() }} foto</span>
+                        </button>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </section>
 
@@ -259,6 +317,84 @@
 </dialog>
 
 <script>
+    (function () {
+        // Kartu rute -> buka dialog detail rute yang sesuai. Video di dalamnya
+        // dihentikan saat dialog ditutup supaya tidak terus main di belakang layar.
+        document.querySelectorAll('.js-route-trigger').forEach(function (card) {
+            card.addEventListener('click', function () {
+                var dialog = document.getElementById(card.dataset.target);
+                if (!dialog) return;
+                dialog.showModal();
+                if (card.dataset.scrollTo === 'gallery') {
+                    var gallerySection = dialog.querySelector('[data-section="gallery"]');
+                    if (gallerySection) {
+                        // Gambar peta/video/galeri di atasnya kadang belum kelar dimuat —
+                        // tunggu itu dulu supaya posisi scroll tidak meleset waktu tinggi
+                        // elemen berubah setelah gambar selesai load.
+                        var scrollToGallery = function () { gallerySection.scrollIntoView({ block: 'start' }); };
+                        var images = dialog.querySelectorAll('img');
+                        var pending = 0;
+                        images.forEach(function (img) {
+                            if (!img.complete) {
+                                pending++;
+                                var done = function () { if (--pending === 0) scrollToGallery(); };
+                                img.addEventListener('load', done, { once: true });
+                                img.addEventListener('error', done, { once: true });
+                            }
+                        });
+                        if (pending === 0) {
+                            scrollToGallery();
+                        } else {
+                            setTimeout(scrollToGallery, 400);
+                        }
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.route-detail-dialog').forEach(function (dialog) {
+            var closeBtn = dialog.querySelector('.route-detail-close');
+            if (closeBtn) closeBtn.addEventListener('click', function () { dialog.close(); });
+
+            dialog.addEventListener('click', function (e) {
+                var r = dialog.getBoundingClientRect();
+                var inside = e.clientY >= r.top && e.clientY <= r.bottom && e.clientX >= r.left && e.clientX <= r.right;
+                if (!inside) dialog.close();
+            });
+
+            dialog.addEventListener('close', function () {
+                var video = dialog.querySelector('video');
+                if (video) video.pause();
+            });
+        });
+    })();
+
+    (function () {
+        var video = document.getElementById('hero-bg-video');
+        var toggle = document.getElementById('hero-video-toggle');
+        if (!video || !toggle) return;
+
+        var playIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l13 7-13 7z"/></svg>';
+        var pauseIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
+
+        function setToggleState(playing) {
+            toggle.innerHTML = playing ? pauseIcon : playIcon;
+            toggle.setAttribute('aria-label', playing ? 'Jeda video latar' : 'Putar video latar');
+        }
+
+        toggle.addEventListener('click', function () {
+            if (video.paused) { video.play(); } else { video.pause(); }
+        });
+        video.addEventListener('play', function () { setToggleState(true); });
+        video.addEventListener('pause', function () { setToggleState(false); });
+
+        // Hormati preferensi pengguna yang sensitif terhadap gerakan — video tetap ada
+        // sebagai gambar diam (frame pertama), tidak diputar otomatis.
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            video.pause();
+        }
+    })();
+
     (function () {
         var lightbox = document.getElementById('poster-lightbox');
         if (!lightbox) return;

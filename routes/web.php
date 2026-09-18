@@ -4,9 +4,10 @@ use App\Http\Controllers\Admin\AboutContentController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventPosterController as AdminEventPosterController;
-use App\Http\Controllers\Admin\GalleryItemController;
+use App\Http\Controllers\Admin\HeroSettingController;
 use App\Http\Controllers\Admin\ScheduleEventController;
 use App\Http\Controllers\Admin\TrailRouteController;
+use App\Http\Controllers\Admin\TrailRoutePhotoController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Contributor\AuthController as ContributorAuthController;
 use App\Http\Controllers\Contributor\EventPosterController as ContributorEventPosterController;
@@ -24,11 +25,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'superadmin'])->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('routes', TrailRouteController::class)->except(['show']);
+        Route::post('/routes/{route}/photos', [TrailRoutePhotoController::class, 'store'])->name('routes.photos.store');
+        Route::delete('/routes/{route}/photos/{photo}', [TrailRoutePhotoController::class, 'destroy'])->name('routes.photos.destroy');
         Route::resource('schedule', ScheduleEventController::class)->except(['show']);
-        Route::resource('gallery', GalleryItemController::class)->except(['show']);
 
         Route::get('/about', [AboutContentController::class, 'edit'])->name('about.edit');
         Route::put('/about', [AboutContentController::class, 'update'])->name('about.update');
+
+        Route::get('/hero', [HeroSettingController::class, 'edit'])->name('hero.edit');
+        Route::put('/hero', [HeroSettingController::class, 'update'])->name('hero.update');
 
         Route::get('/posters', [AdminEventPosterController::class, 'index'])->name('posters.index');
         Route::get('/posters/{poster}/edit', [AdminEventPosterController::class, 'edit'])->name('posters.edit');

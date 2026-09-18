@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AboutContent;
 use App\Models\EventPoster;
-use App\Models\GalleryItem;
+use App\Models\HeroSetting;
 use App\Models\ScheduleEvent;
 use App\Models\TrailRoute;
 use Illuminate\Support\Str;
@@ -19,7 +19,7 @@ class HomeController extends Controller
         $menu = [
             ['id' => 'beranda', 'label' => 'Beranda'],
             ['id' => 'tentang', 'label' => 'Tentang'],
-            ['id' => 'rute', 'label' => 'Rute & Trek'],
+            ['id' => 'rute', 'label' => 'Rute & Paket'],
             ['id' => 'jadwal', 'label' => 'Jadwal'],
             ['id' => 'galeri', 'label' => 'Galeri'],
             ['id' => 'event-trabas', 'label' => 'Jadwal Event Trabas'],
@@ -33,10 +33,14 @@ class HomeController extends Controller
             ['num' => '6', 'label' => 'Gunung dijelajahi'],
         ];
 
+        $hero = HeroSetting::current();
         $about = AboutContent::current();
-        $routes = TrailRoute::ordered()->get();
+        $routes = TrailRoute::ordered()->with('photos')->get();
         $schedule = ScheduleEvent::upcomingFirst()->get();
-        $gallery = GalleryItem::ordered()->get();
+
+        // Section "Galeri" di beranda dipakai dari foto rute (Rute & Paket) — cuma rute
+        // yang sudah punya foto galeri yang tampil di sini, jadi tidak ada tempelan kosong.
+        $galleryRoutes = $routes->filter(fn (TrailRoute $route) => $route->photos->isNotEmpty())->values();
 
         $nextEvent = $schedule->firstWhere('event_date', '>=', today())
             ?? $schedule->first();
@@ -57,7 +61,7 @@ class HomeController extends Controller
         ];
 
         return view('welcome', compact(
-            'menu', 'stats', 'about', 'nextEvent', 'routes', 'roadbookByCategory', 'gallery', 'eventPostersByCategory', 'contacts'
+            'menu', 'stats', 'hero', 'about', 'nextEvent', 'routes', 'roadbookByCategory', 'galleryRoutes', 'eventPostersByCategory', 'contacts'
         ));
     }
 
