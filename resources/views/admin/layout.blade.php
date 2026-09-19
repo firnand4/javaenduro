@@ -13,9 +13,10 @@
 <body>
 <div class="admin-shell">
     <aside class="admin-sidebar">
-        <a href="{{ route('home') }}" class="brand" target="_blank"><span class="mark"><span>JE</span></span>JAVAENDURO</a>
+        <a href="{{ route('home') }}" class="brand" target="_blank">@include('partials.brand-mark')</a>
         <nav class="admin-nav">
             <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
+            <a href="{{ route('admin.branding.edit') }}" class="{{ request()->routeIs('admin.branding.*') ? 'active' : '' }}">Logo Situs</a>
             <a href="{{ route('admin.hero.edit') }}" class="{{ request()->routeIs('admin.hero.*') ? 'active' : '' }}">Video Beranda</a>
             <a href="{{ route('admin.routes.index') }}" class="{{ request()->routeIs('admin.routes.*') ? 'active' : '' }}">Rute &amp; Trek</a>
             <a href="{{ route('admin.schedule.index') }}" class="{{ request()->routeIs('admin.schedule.*') ? 'active' : '' }}">Jadwal Event</a>

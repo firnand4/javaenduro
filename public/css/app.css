@@ -109,6 +109,7 @@ section{ position: relative; }
   clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
   display:grid; place-items:center;
 }
+.brand-logo-img{ height:34px; width:auto; max-width:200px; object-fit:contain; display:block; }
 .brand .mark span{ color: var(--accent-ink); font-family: var(--font-mono); font-weight:700; font-size:0.8rem; }
 .menu{ display:flex; align-items:center; gap: clamp(0.9rem, 2vw, 1.8rem); list-style:none; margin:0; padding:0; }
 .menu a{

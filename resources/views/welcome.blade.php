@@ -15,7 +15,7 @@
 
 <nav class="nav">
     <div class="wrap nav-row">
-        <a href="#top" class="brand"><span class="mark"><span>JE</span></span>JAVAENDURO</a>
+        <a href="#top" class="brand">@include('partials.brand-mark')</a>
         <input type="checkbox" id="nav-toggle" class="nav-toggle">
         <ul class="menu">
             @foreach ($menu as $item)

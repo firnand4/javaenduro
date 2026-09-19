@@ -13,7 +13,7 @@
 <body>
 <div class="admin-login-wrap">
     <div class="admin-login-card">
-        <a href="{{ route('home') }}" class="brand"><span class="mark"><span>JE</span></span>JAVAENDURO</a>
+        <a href="{{ route('home') }}" class="brand">@include('partials.brand-mark')</a>
 
         @auth
             <div class="admin-alert">

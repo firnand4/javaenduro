@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventPosterController as AdminEventPosterController;
 use App\Http\Controllers\Admin\HeroSettingController;
 use App\Http\Controllers\Admin\ScheduleEventController;
+use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\TrailRouteController;
 use App\Http\Controllers\Admin\TrailRoutePhotoController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -34,6 +35,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/hero', [HeroSettingController::class, 'edit'])->name('hero.edit');
         Route::put('/hero', [HeroSettingController::class, 'update'])->name('hero.update');
+
+        Route::get('/branding', [SiteSettingController::class, 'edit'])->name('branding.edit');
+        Route::put('/branding', [SiteSettingController::class, 'update'])->name('branding.update');
 
         Route::get('/posters', [AdminEventPosterController::class, 'index'])->name('posters.index');
         Route::get('/posters/{poster}/edit', [AdminEventPosterController::class, 'edit'])->name('posters.edit');

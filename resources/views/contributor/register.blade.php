@@ -13,7 +13,7 @@
 <body>
 <div class="admin-login-wrap">
     <div class="admin-login-card" style="max-width:400px;">
-        <a href="{{ route('home') }}" class="brand"><span class="mark"><span>JE</span></span>JAVAENDURO</a>
+        <a href="{{ route('home') }}" class="brand">@include('partials.brand-mark')</a>
         <p style="color:var(--ink-soft); font-size:0.92rem; margin:-1rem 0 1.4rem;">Daftar sebagai kontributor untuk upload poster event trabas kamu.</p>
 
         @if ($errors->any())
